@@ -1,0 +1,143 @@
+{% extends 'levels/base.html' %}
+{% block title %}
+All Levels
+{% endblock %}
+
+{% block content %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<table class="table">
+<tr><td style="width:35%">
+{% if levels.has_other_pages %}
+    <ul class="pagination">
+
+{% if levels.has_previous %}
+    <li class="page-item"><a class="page-link" href="?page={{ levels.previous_page_number }}&filter_by_level={{ filter_by_level }}&filter_by_olt={{ filter_by_olt }}&filter_by_mac={{ filter_by_mac }}&filter_by_epon={{ filter_by_epon }}&filter_on_page={{ filter_on_page }}"><i class="fa fa-chevron-left" aria-hidden="true"></i>&laquo;</a></li>
+{% else %}
+    <li class="disabled"><span><i class="fa fa-chevron-left" aria-hidden="true"></i></span></li>
+{% endif %}
+
+{% if levels.number|add:'-2' > 1 %}
+    <li class="page-item"><a class="page-link" href="?page={{ levels.number|add:'-2' }}&filter_by_level={{ filter_by_level }}&filter_by_olt={{ filter_by_olt }}&filter_by_mac={{ filter_by_mac }}&filter_by_epon={{ filter_by_epon }}&filter_on_page={{ filter_on_page }}">&hellip;</a></li>
+{% endif %}
+
+{% for i in levels.paginator.page_range %}
+    {% if levels.number == i %}
+        <li class="page-item active"><a class="page-link" href="#"<span class="sr-only">{{ i }}</span></a></li>
+    {% elif i > levels.number|add:'-3' and i < levels.number|add:'3' %}
+        <li class="page-item"><a class="page-link" href="?page={{ i }}&filter_by_level={{ filter_by_level }}&filter_by_olt={{ filter_by_olt }}&filter_by_mac={{ filter_by_mac }}&filter_by_epon={{ filter_by_epon }}&filter_on_page={{ filter_on_page }}">{{ i }}</a></li>
+    {% endif %}
+{% endfor %}
+
+{% if levels.paginator.num_pages > levels.number|add:'2' %}
+    <li class="page-item"><a class="page-link" href="?page={{ levels.number|add:'2' }}&filter_by_level={{ filter_by_level }}&filter_by_olt={{ filter_by_olt }}&filter_by_mac={{ filter_by_mac }}&filter_by_epon={{ filter_by_epon }}&filter_on_page={{ filter_on_page }}">&hellip;</a></li>
+{% endif %}
+
+{% if levels.has_next %}
+    <li class="page-item"><a class="page-link" href="?page={{ levels.next_page_number }}&filter_by_level={{ filter_by_level }}&filter_by_olt={{ filter_by_olt }}&filter_by_mac={{ filter_by_mac }}&filter_by_epon={{ filter_by_epon }}&filter_on_page={{ filter_on_page }}"><i class="fa fa-chevron-right" aria-hidden="true"></i>&raquo;</a></li>
+{% else %}
+    <li class="disabled"><span><i class="fa fa-chevron-right" aria-hidden="true"></i></span></li>
+{% endif %}
+
+</ul>
+{% endif %}
+</td>
+<td>
+    <a href="/" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Top critical</a> &#160;
+    <a href="/levels/all_levels/" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">All levels</a> &#160;
+    <a href="/levels/olt_list_diff/" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Worst Diff</a>
+    <input placeholder="Всього ОНУ: {{ total }}" size=15 disabled>
+</td>
+<td style="width:10%">
+<form method = 'GET' name="filter_on_page">
+<ul class="pagination" >
+ {% if filter_on_page == '10' %}
+ <li class="page-item active"><a class="page-link" href="?page={{ levels.number }}&filter_by_level={{ filter_by_level }}&filter_by_olt={{ filter_by_olt }}&filter_by_mac={{ filter_by_mac }}&filter_by_epon={{ filter_by_epon }}&filter_on_page=10" <span class="sr-only">10</span></a></li>
+ {% else %}
+ <li class="page-item"><a class="page-link" href="?page={{ levels.number }}&filter_by_level={{ filter_by_level }}&filter_by_olt={{ filter_by_olt }}&filter_by_mac={{ filter_by_mac }}&filter_by_epon={{ filter_by_epon }}&filter_on_page=10" <span class="sr-only">10</span></a></li>
+ {% endif %}
+ {% if filter_on_page == '20' %}
+ <li class="page-item active"><a class="page-link" href="?page={{ levels.number }}&filter_by_level={{ filter_by_level }}&filter_by_olt={{ filter_by_olt }}&filter_by_mac={{ filter_by_mac }}&filter_by_epon={{ filter_by_epon }}&filter_on_page=20" <span class="sr-only">20</span></a></li>
+ {% else %}
+ <li class="page-item"><a class="page-link" href="?page={{ levels.number }}&filter_by_level={{ filter_by_level }}&filter_by_olt={{ filter_by_olt }}&filter_by_mac={{ filter_by_mac }}&filter_by_epon={{ filter_by_epon }}&filter_on_page=20" <span class="sr-only">20</span></a></li>
+ {% endif %}
+ {% if filter_on_page == '50' %}
+ <li class="page-item active"><a class="page-link" href="?page={{ levels.number }}&filter_by_level={{ filter_by_level }}&filter_by_olt={{ filter_by_olt }}&filter_by_mac={{ filter_by_mac }}&filter_by_epon={{ filter_by_epon }}&filter_on_page=50" <span class="sr-only">50</span></a></li>
+ {% else %}
+ <li class="page-item"><a class="page-link" href="?page={{ levels.number }}&filter_by_level={{ filter_by_level }}&filter_by_olt={{ filter_by_olt }}&filter_by_mac={{ filter_by_mac }}&filter_by_epon={{ filter_by_epon }}&filter_on_page=50" <span class="sr-only">50</span></a></li>
+ {% endif %}
+ {% if filter_on_page == '100' %}
+ <li class="page-item active"><a class="page-link" href="?page={{ levels.number }}&filter_by_level={{ filter_by_level }}&filter_by_olt={{ filter_by_olt }}&filter_by_mac={{ filter_by_mac }}&filter_by_epon={{ filter_by_epon }}&filter_on_page=100" <span class="sr-only">100</span></a></li>
+ {% else %}
+ <li class="page-item"><a class="page-link" href="?page={{ levels.number }}&filter_by_level={{ filter_by_level }}&filter_by_olt={{ filter_by_olt }}&filter_by_mac={{ filter_by_mac }}&filter_by_epon={{ filter_by_epon }}&filter_on_page=100" <span class="sr-only">100</span></a></li>
+ {% endif %}
+ {% if filter_on_page == 'all' %}
+ <li class="page-item active"><a class="page-link" href="?page={{ levels.number }}&filter_by_level={{ filter_by_level }}&filter_by_olt={{ filter_by_olt }}&filter_by_mac={{ filter_by_mac }}&filter_by_epon={{ filter_by_epon }}&filter_on_page=all" <span class="sr-only">ALL</span></a></li>
+ {% else %}
+ <li class="page-item"><a class="page-link" href="?page={{ levels.number }}&filter_by_level={{ filter_by_level }}&filter_by_olt={{ filter_by_olt }}&filter_by_mac={{ filter_by_mac }}&filter_by_epon={{ filter_by_epon }}&filter_on_page=all" <span class="sr-only">ALL</span></a></li>
+ {% endif %}
+</ul>
+</form>
+</td>
+</tr>
+</table>
+
+<div class="panel panel-primary filterable">
+
+<table class="table table-bordered" style="margin-top:-30px">
+    <thead class="thead-dark">
+        <tr style="text-align:center">
+            <th scope="col" width="100px" >OLT</th>
+            <th scope="col" width="100px">EPON</th>
+            <th scope="col" width="100px" >MAC</th>
+            {% for title in titles %}
+            <th scope="col">{{ title|slice:"5:" }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+
+    <tbody  id="myTable">
+    {% for level in levels %}
+        <tr >
+            <td><a href="{% url 'levels_olt' olt=level.olt %}">{{level.olt|default:"-"}}</a></td>
+            <td>{{level.epon|default:"-"}}</td>
+            <td>{{level.mac|default:"-"}}</td>
+            {% if level.one < -24.9 and level.one > -27 %}
+            <td style="background-color:#FCC055;">{{level.one|default:"-"}}</td>
+            {% elif level.one < -26.9 %}
+            <td style="background-color:#E7817E;">{{level.one|default:"-"}}</td>
+            {% else %}
+            <td>{{level.one|default:"-"}}</td>
+            {% endif %}
+            <td>{{level.two|default:"-"}}</td>
+            <td>{{level.three|default:"-"}}</td>
+            <td>{{level.four|default:"-"}}</td>
+            <td>{{level.five|default:"-"}}</td>
+            <td>{{level.six|default:"-"}}</td>
+            <td>{{level.seven|default:"-"}}</td>
+            <td>{{level.eight|default:"-"}}</td>
+            <td>{{level.nine|default:"-"}}</td>
+            <td>{{level.ten|default:"-"}}</td>
+            <td>{{level.eleven|default:"-"}}</td>
+            <td>{{level.twelve|default:"-"}}</td>
+            <td>{{level.thirteen|default:"-"}}</td>
+            <td>{{level.fourteen|default:"-"}}</td>
+        </tr>
+    {% endfor %}
+    <form action="{% url 'all_levels' %}" method = 'GET'>
+      <tr class="filters"  align="left" >
+      <th><input type="text" name="filter_by_olt" size=12 value="{{ filter_by_olt }}" placeholder="OLT" ></th>
+      <th><input type="text" name="filter_by_epon" size=12 value="{{ filter_by_epon }}" placeholder="EPON" ></th>
+      <th><input type="text" name="filter_by_mac" size=15 value="{{ filter_by_mac }}" placeholder="MAC" ></th>
+      <th><input type="text" name="filter_by_level" size=10 value="{{ filter_by_level | default:""}}" placeholder="level"></th>
+      <th><input type="text" name="filter_on_page" size=10 value="{{ filter_on_page }}" hidden></th>
+          <button type="submit" hidden></button>
+
+    </form>
+    </tr>
+  </tbody>
+</table>
+
+</div>
+{% endblock %}
